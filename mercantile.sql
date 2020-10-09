@@ -1,5 +1,6 @@
 CREATE OR REPLACE FUNCTION public.T_sinh(x double precision)
 RETURNS double precision LANGUAGE sql IMMUTABLE STRICT AS $$
+  -- sinh function has been introduced in version 12 of PostgreSQL
   SELECT (exp(x)-exp(-1*x))/2
 $$;
 
@@ -22,6 +23,7 @@ $$;
 
 CREATE OR REPLACE FUNCTION public.T_ul(tile geometry)
 RETURNS geometry LANGUAGE plpgsql IMMUTABLE STRICT AS $$
+  -- Returns the upper left point of a tile
   DECLARE
     xtile integer;
     ytile integer;
@@ -47,6 +49,7 @@ $$;
 
 CREATE OR REPLACE FUNCTION public.T_bounds(tile geometry)
 RETURNS geometry LANGUAGE plpgsql IMMUTABLE STRICT AS $$
+  -- Returns the bounding box polygon of a tile
   DECLARE
     xtile integer;
     ytile integer;
@@ -93,6 +96,7 @@ $$;
 
 CREATE OR REPLACE FUNCTION public.T_tile(pnt geometry, zoom integer, truncated boolean default FALSE)
 RETURNS geometry LANGUAGE plpgsql IMMUTABLE STRICT AS $$
+  -- Get the tile containing a point
   DECLARE
     EPSILON double precision = pow(10, -14);
     pnt_merc geometry;
@@ -129,5 +133,6 @@ $$;
 
 CREATE OR REPLACE FUNCTION public.T_tilename(tile geometry)
 RETURNS text LANGUAGE sql IMMUTABLE STRICT AS $$
+  -- Return the tile coordinate string in the format 'tilex/tiley/zoom'
   SELECT CONCAT_WS('/', ST_X(tile)::text, ST_Y(tile)::text, ST_Z(tile)::text)
 $$;
